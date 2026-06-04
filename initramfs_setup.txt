@@ -1,0 +1,124 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Minimal initramfs for Subleq
+#
+# Format: type name [mode uid gid [mtime]]
+# mtime is Unix timestamp (seconds since 1970-01-01)
+#
+# Using fixed mtime of 1704067200 = 2024-01-01 00:00:00 UTC
+# This ensures reproducible builds and prevents "future date" warnings
+
+# Directories (mode uid gid)
+dir /bin 0755 0 0
+dir /sbin 0755 0 0
+dir /etc 0755 0 0
+dir /proc 0755 0 0
+dir /sys 0755 0 0
+dir /dev 0755 0 0
+dir /usr 0755 0 0
+dir /usr/bin 0755 0 0
+dir /usr/sbin 0755 0 0
+dir /root 0700 0 0
+dir /lib 0755 0 0
+dir /tmp 1777 0 0
+
+# Console device node (required for /dev/console)
+nod /dev/console 0600 0 0 c 5 1
+
+# Null device (useful for discarding output)
+nod /dev/null 0666 0 0 c 1 3
+
+# Zero device
+nod /dev/zero 0666 0 0 c 1 5
+
+# Serial console (ttyS0 = major 4, minor 64)
+nod /dev/ttyS0 0666 0 0 c 4 64
+
+# TTY device
+nod /dev/tty 0666 0 0 c 5 0
+
+# Libraries
+file /lib/libc.so ../uclibc-ng/lib/libc.so 0755 0 0
+file /lib/libc++.so.1 ../runtime/sysroot/lib/libc++.so.1.0 0755 0 0
+
+# Busybox applet symlinks (auto-generated from .config)
+# Applets with BB_DIR_BIN -> /bin
+slink /bin/cat /bin/busybox 0755 0 0
+slink /bin/chgrp /bin/busybox 0755 0 0
+slink /bin/chmod /bin/busybox 0755 0 0
+slink /bin/chown /bin/busybox 0755 0 0
+slink /bin/cp /bin/busybox 0755 0 0
+slink /bin/cpio /bin/busybox 0755 0 0
+slink /bin/date /bin/busybox 0755 0 0
+slink /bin/dd /bin/busybox 0755 0 0
+slink /bin/df /bin/busybox 0755 0 0
+slink /bin/dmesg /bin/busybox 0755 0 0
+slink /bin/echo /bin/busybox 0755 0 0
+slink /bin/grep /bin/busybox 0755 0 0
+slink /bin/gunzip /bin/busybox 0755 0 0
+slink /bin/gzip /bin/busybox 0755 0 0
+slink /bin/hostname /bin/busybox 0755 0 0
+slink /bin/hush /bin/busybox 0755 0 0
+slink /bin/kill /bin/busybox 0755 0 0
+slink /bin/ln /bin/busybox 0755 0 0
+slink /bin/login /bin/busybox 0755 0 0
+slink /bin/ls /bin/busybox 0755 0 0
+slink /bin/lsblk /bin/busybox 0755 0 0
+slink /bin/mkdir /bin/busybox 0755 0 0
+slink /bin/more /bin/busybox 0755 0 0
+slink /bin/mount /bin/busybox 0755 0 0
+slink /bin/mv /bin/busybox 0755 0 0
+slink /bin/netstat /bin/busybox 0755 0 0
+slink /bin/pidof /bin/busybox 0755 0 0
+slink /bin/ping /bin/busybox 0755 0 0
+slink /bin/ps /bin/busybox 0755 0 0
+slink /bin/pstree /bin/busybox 0755 0 0
+slink /bin/pwd /bin/busybox 0755 0 0
+slink /bin/rm /bin/busybox 0755 0 0
+slink /bin/rmdir /bin/busybox 0755 0 0
+slink /bin/sh /bin/busybox 0755 0 0
+slink /bin/sleep /bin/busybox 0755 0 0
+slink /bin/stat /bin/busybox 0755 0 0
+slink /bin/stty /bin/busybox 0755 0 0
+slink /bin/sync /bin/busybox 0755 0 0
+slink /bin/tar /bin/busybox 0755 0 0
+slink /bin/touch /bin/busybox 0755 0 0
+slink /bin/umount /bin/busybox 0755 0 0
+slink /bin/uname /bin/busybox 0755 0 0
+slink /bin/uuidgen /bin/busybox 0755 0 0
+slink /bin/vi /bin/busybox 0755 0 0
+slink /bin/vmstat /bin/busybox 0755 0 0
+slink /bin/wait /bin/busybox 0755 0 0
+slink /bin/watch /bin/busybox 0755 0 0
+
+# Applets with BB_DIR_USR_BIN -> /usr/bin
+slink /usr/bin/bzip2 /bin/busybox 0755 0 0
+slink /usr/bin/clear /bin/busybox 0755 0 0
+slink /usr/bin/diff /bin/busybox 0755 0 0
+slink /usr/bin/dirname /bin/busybox 0755 0 0
+slink /usr/bin/du /bin/busybox 0755 0 0
+slink /usr/bin/env /bin/busybox 0755 0 0
+slink /usr/bin/find /bin/busybox 0755 0 0
+slink /usr/bin/free /bin/busybox 0755 0 0
+slink /usr/bin/head /bin/busybox 0755 0 0
+slink /usr/bin/killall /bin/busybox 0755 0 0
+slink /usr/bin/less /bin/busybox 0755 0 0
+slink /usr/bin/md5sum /bin/busybox 0755 0 0
+slink /usr/bin/nohup /bin/busybox 0755 0 0
+slink /usr/bin/reset /bin/busybox 0755 0 0
+slink /usr/bin/resize /bin/busybox 0755 0 0
+slink /usr/bin/tail /bin/busybox 0755 0 0
+slink /usr/bin/tee /bin/busybox 0755 0 0
+slink /usr/bin/time /bin/busybox 0755 0 0
+slink /usr/bin/top /bin/busybox 0755 0 0
+slink /usr/bin/traceroute /bin/busybox 0755 0 0
+slink /usr/bin/uptime /bin/busybox 0755 0 0
+slink /usr/bin/wc /bin/busybox 0755 0 0
+slink /usr/bin/which /bin/busybox 0755 0 0
+slink /usr/bin/whoami /bin/busybox 0755 0 0
+slink /usr/bin/xxd /bin/busybox 0755 0 0
+slink /usr/bin/xz /bin/busybox 0755 0 0
+slink /usr/bin/yes /bin/busybox 0755 0 0
+
+# Applets with BB_DIR_SBIN -> /sbin
+slink /sbin/route /bin/busybox 0755 0 0
+slink /sbin/sysctl /bin/busybox 0755 0 0

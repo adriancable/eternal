@@ -1,0 +1,17 @@
+#ifndef _LIBCPP_ASSERTION_HANDLER
+#define _LIBCPP_ASSERTION_HANDLER
+
+#include <__config>
+
+#if _LIBCPP_HARDENING_MODE == _LIBCPP_HARDENING_MODE_DEBUG || \
+    _LIBCPP_ASSERTION_SEMANTIC == _LIBCPP_ASSERTION_SEMANTIC_ENFORCE || \
+    _LIBCPP_ASSERTION_SEMANTIC == _LIBCPP_ASSERTION_SEMANTIC_QUICK_ENFORCE
+
+// If we were enforcing, we would need this.
+// namespace std {
+//   [[noreturn]] void __libcpp_assertion_handler(char const* __file, int __line, char const* __expression, char const* __message);
+// }
+
+#endif
+
+#endif
