@@ -33,6 +33,8 @@ You will need SDL3 to build the ESI virtual machine. Install with e.g. `apt inst
 ```
 cd vm
 make
+
+xz -d ../capsules/vmlinux.bootimage.xz
 ./vm ../capsules/vmlinux.bootimage
 ```
 
