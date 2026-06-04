@@ -6,7 +6,7 @@ The ESI defines a minimal machine architecture (based on a modification of the S
 
 What's the point of all this? Running today's software requires a complex stack of dependencies (compilers, libraries frameworks, OS) on top of proprietary and incompletely documented hardware, making it very difficult to ensure that today's software will continue to operate in the future. This problem of 'bit rot' is well known to anyone maintaining legacy software over a timespan of years or decades, but now imagine a historian 1,000 years from now trying to understand 21st century life, much of which is experienced through software. Even if today's software binaries are preserved, it is far fetched to imagine those binaries will still be runnable. Emulators like QEMU move this problem around but do not solve it: they too have a similarly complex stack of software and hardware dependencies, and so also won't be runnable in the far future.
 
-The ESI solves this problem by (1) defining an architecture that is simple enough to write down on a napkin but powerful enough to efficiency represent any software, but does not require knowledge of any proprietary hardware, software, frameworks and so forth, and (2) implementing a toolchain to compile any existing software for this architecture into a self-contained `capsule`. These factors ensure that, providing the capsule binary and the napkin instructions are preserved, the software can be revived and experienced in the far future without assuming any knowledge of present day computing systems.
+The ESI solves this problem by (1) defining an architecture that is simple enough to write down on a napkin but powerful enough to efficiently represent any software, but does not require knowledge of any proprietary hardware, software, frameworks and so forth, and (2) implementing a toolchain to compile any existing software for this architecture into a self-contained 'capsule'. This ensures that, providing the capsule binary and the napkin instructions are preserved, the software can be revived and experienced in the far future without assuming any knowledge of present day computing systems.
 
 This repository includes everything needed to build and run your own ESI machine, and build ESI 'capsules' from existing software.
 
@@ -45,9 +45,9 @@ cd doom
 
 # Building the Toolchain
 
-## Step 1: Build ESI LLVM
+The ESI toolchain should build on any Linux system with minimal effort. We have also successfully built on macOS, with [some modifications](https://seiya.me/blog/building-linux-on-macos-natively). Make sure you have `gcc`, `python3`, `CMake` and `ninja` installed and operational.
 
-Make sure `CMake` and `Ninja` are installed on your system. Then run:
+## Step 1: Build ESI LLVM
 
 ```
 rm -rf llvm-project/build && mkdir -p llvm-project/build
