@@ -1,6 +1,6 @@
 # Introduction
 
-This is the root repository for the Eternal Software Initiative.
+This is the root repository for the [Eternal Software Initiative](https://www.eternal-software.org).
 
 The ESI defines a minimal machine architecture (based on a modification of the Subleq OISC) that is so simple that its complete specification can be written down on a napkin. We then provide an LLVM compiler backend for this architecture, a port of Linux, ports of the C/C++ runtime libraries, and other tools (including a reference virtual machine implementation in ~50 lines of C) required to build and run a self-contained 'capsule' from existing software.
 
@@ -31,7 +31,7 @@ git clone --recurse-submodules https://github.com/adriancable/eternal
 You will need SDL3 to build the ESI virtual machine. Install with e.g. `apt install libsdl3-dev`. There are no other dependencies. SDL3 can easily be replaced with any other means for writing pixels and capturing keyboard events, now or in the future.
 
 ```
-cd vm
+cd eternal/vm
 make
 
 xz -d ../capsules/vmlinux.bootimage.xz
@@ -47,7 +47,9 @@ cd doom
 
 # Building the Toolchain
 
-The ESI toolchain should build on any Linux system with minimal effort. We have also successfully built on macOS, with [some modifications](https://seiya.me/blog/building-linux-on-macos-natively). Make sure you have `gcc`, `python3`, `CMake` and `ninja` installed and operational.
+The ESI toolchain should build on any Linux system with minimal effort. We have also successfully built on macOS, with [some modifications](https://seiya.me/blog/building-linux-on-macos-natively). Make sure you have `gcc`, `python3`, `CMake`, `ninja`, `flex`, `bison` installed and operational.
+
+Start in the checked-out `eternal` folder.
 
 ## Step 1: Build ESI LLVM
 
@@ -109,10 +111,11 @@ make CC=../llvm-project/build/bin/clang \
      AR=../llvm-project/build/bin/llvm-ar \
      STRIP=../llvm-project/build/bin/llvm-strip
 
+mkdir ../initramfs_root/bin
 cp busybox ../initramfs_root/bin/busybox
 ```
 
-## Step 5: Build ESI Linux
+## Step 6: Build ESI Linux
 
 ```
 cd ../linux
@@ -135,7 +138,7 @@ make ARCH=subleq \
   OBJCOPY=../llvm-project/build/bin/llvm-objcopy
 ```
 
-## Step 6: Build Capsule and Run VM
+## Step 7: Build Capsule and Run VM
 
 ```
 cd ..
