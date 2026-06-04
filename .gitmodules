@@ -1,0 +1,12 @@
+[submodule "llvm-project"]
+	path = llvm-project
+	url = https://github.com/adriancable/llvm-project
+[submodule "busybox"]
+	path = busybox
+	url = https://github.com/adriancable/busybox
+[submodule "uclibc-ng"]
+	path = uclibc-ng
+	url = https://github.com/adriancable/uclibc-ng
+[submodule "linux"]
+	path = linux
+	url = https://github.com/adriancable/linux
