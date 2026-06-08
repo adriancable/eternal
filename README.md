@@ -197,3 +197,6 @@ run the software within.
 - [LLVM backend port reference](docs/llvm_backend.md)
 - [Linux kernel port reference](docs/esi_linux_port.md)
 
+# IOCCC
+
+A minified version of the ESI virtual machine was a winner of the [29th IOCCC competition](https://www.ioccc.org/2025/cable/index.html).
