@@ -1,4 +1,9 @@
 // Eternal Computer Virtual Machine with Framebuffer Support
+//
+// This code is intended as a minimal implementation of a fully functional VM
+// for the ESI architecture. It is not intended as a 'production grade' virtual
+// machine (e.g. there is no memory bounds checking) to keep the implementation
+// as simple as possible.
 
 #include <SDL3/SDL.h>
 #include <stdio.h>
