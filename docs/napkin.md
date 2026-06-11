@@ -31,7 +31,7 @@ You now have three addresses: **A**, **B**, **C**. If, after reading the three a
 - **If B = −1**: Display slot[A] as one character of text to the human operator.
 
 - **Otherwise**:
-  - If A = 64: fill slots 64 and 65 with the current time (seconds and nanoseconds since midnight on January 1st, 1970).
+  - If A = 64: fill slots 64, 65, and 66 with the current time, as follows. Count the number of seconds since midnight on January 1st, 1970. Place the remainder of dividing that count by 4,294,967,296 into slot 64, and the whole-number result of that same division into slot 65. Place the number of nanoseconds past the current second (0 to 999,999,999) into slot 66.
   - **Subtract**: slot[B] ← slot[B] − slot[A].
   - **Branch**: if slot[B] is now ≤ 0, set P to C. (Otherwise, P stays where it already is - just past the three values you read.)
 
