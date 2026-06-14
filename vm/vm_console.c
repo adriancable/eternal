@@ -6,18 +6,18 @@
 // machine (e.g. there is no memory bounds checking) to keep the implementation
 // as simple as possible.
 
+#include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
 
 #define MEM_SIZE 3<<27
+#define IO_SENTINEL_WORD (((uint32_t)-4) / 4)
 
-int mem[MEM_SIZE];  /* Memory: 1.5GB (3*2^27 words) */
-int pc;             /* Program counter (word index) */
-int timer;          /* Timer counter for interrupts */
+uint32_t mem[MEM_SIZE];  /* Memory: 1.5GB (3*2^27 words) */
 
-int fetch_operand(void) {
-    int raw = mem[pc++];
+static inline uint32_t fetch_operand(uint32_t *pc) {
+    uint32_t raw = mem[(*pc)++];
 
     if (raw & 1) { // Indirect: bit 0 set, dereference the pointer */
         return mem[raw / 4] / 4;
@@ -27,21 +27,24 @@ int fetch_operand(void) {
 }
 
 int main(int argc, char *argv[]) {
-    int a, b, c;
+    uint32_t a, b, c;
+    uint32_t pc = 0;     /* Program counter (word index) */
+    uint32_t timer = 0;  /* Timer counter for interrupts */
 
     fread(mem, 4, MEM_SIZE, fopen(argv[1], "r"));
     do {
         // Fetch instruction
-        a = fetch_operand(), b = fetch_operand(), c = fetch_operand();
+        a = fetch_operand(&pc), b = fetch_operand(&pc), c = fetch_operand(&pc);
 
-        if (a == -1) { // GETCHAR: A is sentinel
+        if (a == IO_SENTINEL_WORD) { // GETCHAR: A is sentinel
             read(0, &mem[b], 1);
-        } else if (b == -1) { // PUTCHAR: B is sentinel (-4 byte addr / 4 = -1)
+        } else if (b == IO_SENTINEL_WORD) { // PUTCHAR: B is sentinel (-4 byte addr / 4)
             write(1, &mem[a], 1);
         } else { // Regular instruction
             if (a == 64) timespec_get((struct timespec *)&mem[64], 1);  // Update clock
-            mem[b] -= mem[a];
-            if (mem[b] <= 0) { // Branch taken: jump to C
+            uint32_t result = mem[b] - mem[a];
+            mem[b] = result;
+            if ((int32_t)result <= 0) { // Branch taken: jump to C
                 pc = c;
             } else if (mem[0] && timer++ > 300000) { // Timer interrupt
                 timer = 0;                           // Reset timer
