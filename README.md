@@ -197,6 +197,12 @@ run the software within.
 - [LLVM backend port reference](docs/llvm_backend.md)
 - [Linux kernel port reference](docs/esi_linux_port.md)
 
+# ESI Virtual Machine Ports
+
+- [WebAssembly](https://github.com/dave1010/eternal-browser-vm) - try [ESI Linux in your browser](https://vm.dave.engineer/?capsule=https%3A%2F%2Fraw.githubusercontent.com%2Fadriancable%2Feternal%2Frefs%2Fheads%2Fmain%2Fcapsules%2Fvmlinux.bootimage.xz)
+
+If you've ported the ESI virtual machine to a new platform, please let us know by filing an *Issue* and we will add it to this list.
+
 # IOCCC
 
-A minified version of the ESI virtual machine was a winner of the [29th IOCCC competition](https://www.ioccc.org/2025/cable/index.html).
+A minified version of the ESI virtual machine (in 366 bytes of C) was a winner of the [29th IOCCC competition](https://www.ioccc.org/2025/cable/index.html).
