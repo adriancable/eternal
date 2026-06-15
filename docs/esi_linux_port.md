@@ -34,15 +34,17 @@ This document provides a complete, self-contained reference for the Linux kernel
 Subleq is a One Instruction Set Computer where the sole operation is:
 
 ```
-subleq(A, B, C):  m[B] -= m[A]; if m[B] <= 0 then PC = C else PC += 12
+subleq(A, B, C):  m[B] -= m[A]; if (int32)m[B] <= 0 then PC = C else PC += 12
 ```
+
+The subtraction is unsigned 32-bit arithmetic; the branch comparison interprets the result as a signed 32-bit integer.
 
 Each instruction is 12 bytes (three 32-bit words). Every high-level operation-addition, multiplication, bitwise logic, memory copies-must be decomposed into sequences of `subleq` instructions. The Linux kernel port runs on this architecture with the following characteristics:
 
 | Property | Value |
 |---|---|
 | **Word size** | 32-bit |
-| **Address space** | 1.5 GB (configurable) |
+| **Address space** | 4 GB byte address space; 1.5 GB (configurable) memory |
 | **Addressing** | Byte-addressed, 4-byte aligned |
 | **MMU** | None (NOMMU) |
 | **Hardware registers** | None (all registers are memory-mapped) |

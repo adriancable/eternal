@@ -28,8 +28,10 @@ This document provides a complete reference for the ESI OISC machine architectur
 Subleq (Subtract and Branch if Less than or Equal to zero) is a One Instruction Set Computer. Every program is a sequence of one instruction:
 
 ```
-subleq(A, B, C):  m[B] -= m[A];  if m[B] <= 0 then PC = C else PC += 12
+subleq(A, B, C):  m[B] -= m[A];  if (int32)m[B] <= 0 then PC = C else PC += 12
 ```
+
+The subtraction is unsigned 32-bit arithmetic; the branch comparison interprets the result as a signed 32-bit integer.
 
 ### 1.2 Encoding
 
@@ -40,7 +42,8 @@ Byte address:   PC      PC+4    PC+8
 Contents:       A       B       C
 ```
 
-- `A`, `B`, `C` are 32-bit signed integers representing **byte addresses**
+- `A`, `B`, `C` are 32-bit unsigned values representing **byte addresses**
+- Negative assembly literals are encoded as their 32-bit two's-complement values (for example, `-4` is stored as `0xfffffffc`)
 - All operand addresses must be **4-byte aligned** (divisible by 4)
 - The VM converts to word indices internally: `m[addr / 4]`
 - Unaligned addresses cause a VM halt
@@ -49,12 +52,14 @@ Contents:       A       B       C
 
 | Property | Value |
 |---|---|
-| Word size | 32-bit (Two's complement) |
+| Word size | 32-bit |
 | Byte order | Little-endian |
-| Address space | 1.5 GB (3 × 2²⁷ words) |
+| Address space | 4 GB (2³⁰ words) |
 | Instruction width | 12 bytes (3 words) |
 | Registers | None (all memory-mapped) |
 | Natural operation | Subtraction + conditional branch |
+
+A VM can back any amount of memory up to the full 4 GB byte address space. Backing all 2³⁰ words makes every 32-bit byte address usable.
 
 ---
 
@@ -506,7 +511,7 @@ The compiler generates various patterns depending on the comparison type. Unsign
 
 ## 7. I/O Model
 
-I/O operations use the sentinel value `−4` (byte address), which becomes `−1` after the VM's internal `/4` conversion:
+I/O operations use the sentinel byte address `0xfffffffc` (`-4` when interpreted as a signed 32-bit integer). After the VM's internal `/4` conversion, it becomes the unsigned word address `0x3fffffff`:
 
 ### 7.1 Operations
 
@@ -745,21 +750,21 @@ All sections are merged into a single flat segment. No separate data/BSS - every
 
 ## 11. Virtual Machine Reference
 
-The production VM is 49 lines of C:
+The production VM is 43 lines of C:
 
 ```c
+#include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
 
 #define MEM_SIZE 3<<27
+#define IO_SENTINEL_WORD (((uint32_t)-4) / 4)
 
-int mem[MEM_SIZE];  /* 1.5GB Memory */
-int pc;             /* Program counter (word index) */
-int timer;          /* Timer counter */
+uint32_t mem[MEM_SIZE];  /* Backing store; may be raised up to 1<<30 words for 4GB */
 
-int fetch_operand(void) {
-    int raw = mem[pc++];
+static inline uint32_t fetch_operand(uint32_t *pc) {
+    uint32_t raw = mem[(*pc)++];
     if (raw & 1)                          /* Indirect (bit 0 set) */
         return mem[raw / 4] / 4;
     else                                  /* Direct */
@@ -767,18 +772,21 @@ int fetch_operand(void) {
 }
 
 int main(int argc, char *argv[]) {
-    int a, b, c;
+    uint32_t a, b, c;
+    uint32_t pc = 0;
+    uint32_t timer = 0;
     fread(mem, 4, MEM_SIZE, fopen(argv[1], "r"));
     do {
-        a = fetch_operand(), b = fetch_operand(), c = fetch_operand();
-        if (a == -1)                      /* GETCHAR */
+        a = fetch_operand(&pc), b = fetch_operand(&pc), c = fetch_operand(&pc);
+        if (a == IO_SENTINEL_WORD)        /* GETCHAR */
             read(0, &mem[b], 1);
-        else if (b == -1)                 /* PUTCHAR */
+        else if (b == IO_SENTINEL_WORD)   /* PUTCHAR */
             write(1, &mem[a], 1);
         else {                            /* Standard SUBLEQ */
             if (a == 64) timespec_get((struct timespec *)&mem[64], 1);
-            mem[b] -= mem[a];
-            if (mem[b] <= 0)
+            uint32_t result = mem[b] - mem[a];
+            mem[b] = result;
+            if ((int32_t)result <= 0)
                 pc = c;                   /* Branch taken */
             else if (mem[0] && timer++ > 300000) {
                 timer = 0;                /* Timer interrupt */

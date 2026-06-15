@@ -1,5 +1,5 @@
 CC ?= cc
-CFLAGS ?= -O3 -march=native --std=gnu17 -fwrapv
+CFLAGS ?= -O3 -march=native --std=gnu17
 SDL3_CFLAGS := $(shell pkg-config sdl3 --cflags 2>/dev/null)
 SDL3_LIBS := $(shell pkg-config sdl3 --libs 2>/dev/null)
 
