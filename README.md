@@ -199,7 +199,7 @@ run the software within.
 
 # ESI Virtual Machine Ports
 
-- [WebAssembly](https://github.com/dave1010/eternal-browser-vm) - try [ESI Linux in your browser](https://vm.dave.engineer/?capsule=https%3A%2F%2Fraw.githubusercontent.com%2Fadriancable%2Feternal%2Frefs%2Fheads%2Fmain%2Fcapsules%2Fvmlinux.bootimage.xz)
+- [WebAssembly](https://github.com/dave1010/eternal-browser-vm) - try [ESI Linux in your browser](https://eternal-software.org/webvm/?capsule=https%3A%2F%2Fraw.githubusercontent.com%2Fadriancable%2Feternal%2Frefs%2Fheads%2Fmain%2Fcapsules%2Fvmlinux.bootimage.xz)
 
 If you've ported the ESI virtual machine to a new platform, please let us know by filing an *Issue* and we will add it to this list.
 
