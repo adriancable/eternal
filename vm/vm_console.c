@@ -43,10 +43,11 @@ int main(int argc, char *argv[]) {
             mem[b] -= mem[a];
             if (mem[b] <= 0) { // Branch taken: jump to C
                 pc = c;
-            } else if (mem[0] && timer++ > 300000) { // Timer interrupt
-                timer = 0;                           // Reset timer
-                mem[1] = pc * 4;                     // Save PC (as byte address)
-                pc = mem[0] / 4;                     // Jump to handler
+            }
+            if (mem[0] && timer++ > 800000) { // Timer interrupt
+                timer = 0;                    // Reset timer
+                mem[1] = pc * 4;              // Save PC (as byte address)
+                pc = mem[0] / 4;              // Jump to handler
             }
         }
     } while(c);
